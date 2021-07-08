@@ -35,4 +35,8 @@ public class PlayerService {
 	public void delete(Long playerId) {
         playerRepository.deleteById(playerId);
 	}
+	
+	public void clearAll() {
+		playerRepository.deleteAll();
+	}
 }
