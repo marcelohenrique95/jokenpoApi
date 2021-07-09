@@ -7,12 +7,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 public class Player {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	 @JsonProperty(value = "namePlayer")
 	private String name;
 	
 	@OneToOne(mappedBy = "player", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -41,5 +44,7 @@ public class Player {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	
 
 }

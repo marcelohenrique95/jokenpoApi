@@ -10,6 +10,6 @@ import com.jokenpo.demo.model.Move;
 @Repository
 public interface MoveRepository extends CrudRepository<Move, Long>{
 	
-	List<Move> findByPlayerId(Long id);
+	List<Move> findByPlayerName(String name);
 
 }

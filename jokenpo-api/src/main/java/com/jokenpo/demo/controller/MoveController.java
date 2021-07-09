@@ -23,10 +23,10 @@ public class MoveController {
 	private MoveService moveService;
 	
 	
-	@PostMapping(path = "/{playerId}/{jokenpoId}")
+	@PostMapping(path = "/{playerName}/{jokenpoId}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Move registerMove(@PathVariable Long playerId,@PathVariable int jokenpoId) {
-		return moveService.createMove(playerId, jokenpoId);
+	public Move registerMove(@PathVariable String playerName, @PathVariable int jokenpoId) {
+		return moveService.createMove(playerName, jokenpoId);
 	}
 	
 	@GetMapping

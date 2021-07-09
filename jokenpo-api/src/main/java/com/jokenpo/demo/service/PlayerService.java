@@ -17,7 +17,7 @@ public class PlayerService {
 	private PlayerRepository playerRepository;
 
 	public Player register(Player player) throws NegocioException {
-		if (player.getName() == null || player.getName().isEmpty()) {
+		if (player.getName() == null || player.getName().isEmpty()) { 
 			throw new NegocioException("Nome não pode ser vázio");
 		}
 		Optional<Player> playerExisting = playerRepository.findByName(player.getName());
@@ -31,12 +31,13 @@ public class PlayerService {
 	public List<Player> listAll() {
 		return (List<Player>) playerRepository.findAll();
 	}
-	
+
 	public void delete(Long playerId) {
-        playerRepository.deleteById(playerId);
+		playerRepository.deleteById(playerId);
 	}
-	
+
 	public void clearAll() {
 		playerRepository.deleteAll();
 	}
+
 }

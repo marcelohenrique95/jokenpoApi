@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 
 import com.jokenpo.demo.enums.JokenpoEnum;
 import com.jokenpo.demo.exception.NegocioException;
+import com.jokenpo.demo.model.GameResult;
 import com.jokenpo.demo.model.Move;
 import com.jokenpo.demo.repository.MoveRepository;
 import com.jokenpo.demo.repository.PlayerRepository;
 
 @Service
 public class GameService {
+
+	@Autowired
+	private PlayerService playerService;
 
 	@Autowired
 	private MoveRepository moveRepository;
@@ -29,6 +33,18 @@ public class GameService {
 			throw new NegocioException("Não tem jogadas suficientes para a partida.");
 		}
 
+		if (moves.size() == 2) {
+			for (int i = 0; i < moves.size(); i++) {
+				Object a = moves.get(i).getJokenpo().getJokenpoId();
+				for (int j = i + 1; j < moves.size(); j++) {
+					Object b = moves.get(j).getJokenpo().getJokenpoId();
+					if (a.equals(b)) {
+						moveRepository.deleteAll();
+						throw new NegocioException("Houve empate! Joguem novamente.");
+					}
+				}
+			}
+		}
 		List<Move> winners = new ArrayList<>();
 		List<Move> losers = new ArrayList<>();
 		moves.forEach(obj -> {
@@ -50,8 +66,8 @@ public class GameService {
 
 	}
 
-	private Boolean whoWin(List<JokenpoEnum> broke, List<Move> moves) throws Exception {
-		for (JokenpoEnum enumJokenpo : broke) {
+	private Boolean whoWin(List<JokenpoEnum> jkp, List<Move> moves) throws Exception {
+		for (JokenpoEnum enumJokenpo : jkp) {
 			for (Move mv : moves) {
 				if (mv.getJokenpo().getJokenpoId() == enumJokenpo.getJokenpoId()) {
 					return false;
@@ -64,27 +80,25 @@ public class GameService {
 	private void deletePlayerLosers(List<Move> losers, List<String> stringReturn) {
 		for (Move loser : losers) {
 			playerRepository.deleteById(loser.getPlayer().getId());
-			stringReturn.add("O Jogador " + loser.getPlayer().getId() + "-" + loser.getPlayer().getName()
-					+ " perdeu e foi removido.");
+			stringReturn.add("O Jogador [" + loser.getPlayer().getName() + "] perdeu e foi removido.");
 		}
 	}
 
 	private void verifyPlayerWin(List<Move> winners, List<String> stringReturn) {
 		for (Move winner : winners) {
-			stringReturn
-					.add("O jogador " + winner.getPlayer().getId() + "-" + winner.getPlayer().getName() + " venceu.");
+			stringReturn.add("O jogador [" + winner.getPlayer().getName() + "] venceu.");
 
 		}
 		switch (winners.size()) {
 		case 0:
-			stringReturn.add("Não houve vencedor");
+			stringReturn.add("Não houve vencedor :(");
 			return;
 		case 1:
 			moveRepository.deleteAll();
 			return;
 		default:
-			stringReturn
-					.add("Não foi possível definir vencedor, jogue outra partida com os jogadores informados acima.");
+			stringReturn.add(
+					"Não foi possível definir um vencedor, jogue outra partida com os jogadores informados acima.");
 
 		}
 

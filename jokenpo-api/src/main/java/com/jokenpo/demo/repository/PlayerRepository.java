@@ -13,5 +13,7 @@ public interface PlayerRepository extends CrudRepository<Player, Long> {
 	Optional<Player> findByName(String name);
 	
 	List<Player> findByNameContaining(String name);
+	
+	List<Player> deleteByName(String name);
 
 }

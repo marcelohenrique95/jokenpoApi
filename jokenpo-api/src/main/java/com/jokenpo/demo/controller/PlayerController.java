@@ -30,6 +30,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
 	public List<Player> listAllPlayer() {
 		return playerService.listAll();
 	}
